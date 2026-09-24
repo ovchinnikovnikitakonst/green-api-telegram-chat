@@ -56,19 +56,6 @@ export function CredentialsForm({
             }
           }}
         >
-          <label htmlFor="apiUrl">API URL</label>
-          <input
-            id="apiUrl"
-            name="apiUrl"
-            type="url"
-            placeholder="https://ваш-кластер.api.green-api.com"
-            required
-            autoComplete="off"
-            aria-describedby="api-hint"
-          />
-          <small id="api-hint">
-            Скопируйте apiUrl из параметров доступа инстанса GREEN-API.
-          </small>
           <label htmlFor="idInstance">ID инстанса</label>
           <input
             id="idInstance"
@@ -87,6 +74,22 @@ export function CredentialsForm({
             required
             autoComplete="off"
           />
+          <div className="api-url-field">
+            <label htmlFor="apiUrl">API URL</label>
+            <input
+              id="apiUrl"
+              name="apiUrl"
+              type="url"
+              placeholder="https://ваш-кластер.api.green-api.com"
+              required
+              autoComplete="off"
+              aria-describedby="api-hint"
+            />
+            <small id="api-hint">
+              Адрес сервера вашего Telegram-инстанса. Скопируйте apiUrl из
+              параметров доступа GREEN-API вместе с ID и токеном.
+            </small>
+          </div>
           {error && (
             <p role="alert" className="error">
               {error}

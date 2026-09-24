@@ -18,7 +18,11 @@ export default defineConfig({
     },
     {
       name: "mobile",
-      use: { ...devices["iPhone 13"], defaultBrowserType: "chromium" },
+      use: {
+        ...devices["iPhone 13"],
+        viewport: { width: 375, height: 812 },
+        defaultBrowserType: "chromium",
+      },
     },
   ],
   webServer: {

@@ -64,8 +64,10 @@ export function Conversation({
         >
           ←
         </button>
-        <span className="avatar">{chat.name.replace("+", "").slice(0, 2)}</span>
-        <div>
+        <span className="avatar" aria-hidden="true">
+          {chat.name.replace(/^[@+]/, "").slice(0, 2).toUpperCase()}
+        </span>
+        <div className="chat-header-text">
           <h2>{chat.name}</h2>
           <small className="muted">Telegram · текстовые сообщения</small>
         </div>
@@ -165,6 +167,7 @@ export function Conversation({
           />
           <button
             className="primary send-button"
+            aria-busy={busy || sending}
             type="submit"
             disabled={sending || busy || !draft.trim()}
             aria-label={busy ? "Отправляется" : "Отправить сообщение"}
@@ -173,8 +176,19 @@ export function Conversation({
           </button>
         </div>
         <div id="composer-hint" className="composer-hint">
-          <span>Enter — отправить · Shift + Enter — новая строка</span>
-          <span>{draft.length} / 4096</span>
+          <span
+            role="status"
+            className={busy || sending ? "sending-hint" : "keyboard-hint"}
+          >
+            {busy || sending
+              ? "Отправляем сообщение…"
+              : "Enter — отправить · Shift + Enter — новая строка"}
+          </span>
+          <span
+            className={`character-count ${draft.length >= 3500 ? "near-limit" : ""}`}
+          >
+            {draft.length} / 4096
+          </span>
         </div>
       </form>
     </section>

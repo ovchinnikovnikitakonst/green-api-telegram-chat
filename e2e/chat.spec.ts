@@ -37,6 +37,10 @@ test("Telegram username and international phone resolve to one chat; 4096 charac
   await message.fill("x".repeat(4096));
   await message.press("Enter");
   await expect(page.locator(".outgoing")).toHaveCount(1);
+  await page.screenshot({
+    path: `test-results/long-message-${testInfo.project.name}.png`,
+    fullPage: true,
+  });
   if (testInfo.project.name === "mobile")
     await page.getByRole("button", { name: "К списку чатов" }).click();
   await page.getByLabel("Новый разговор").fill("+44 (7700) 900123");
@@ -91,7 +95,7 @@ test("connect, send, receive, deduplicate and clear session", async ({
               typeWebhook: "incomingMessageReceived",
               instanceData: { typeInstance: "telegram" },
               idMessage: "in1",
-              timestamp: 1700000000,
+              timestamp: Math.floor(Date.now() / 1000),
               senderData: { chatId: "123", chatName: "Собеседник" },
               messageData: {
                 typeMessage: "textMessage",
@@ -144,6 +148,27 @@ test("connect, send, receive, deduplicate and clear session", async ({
   await expect.poll(() => acknowledgements).toBe(2);
   await expect(page.locator(".incoming")).toHaveCount(1);
   expect(sent).toBe(1);
+  if (testInfo.project.name === "mobile") {
+    await expect(page.locator(".keyboard-hint")).toBeHidden();
+    await expect(page.locator(".character-count")).toBeHidden();
+    const emptyHeight = await input.evaluate(
+      (el) => el.getBoundingClientRect().height,
+    );
+    expect(emptyHeight).toBeGreaterThanOrEqual(48);
+    expect(emptyHeight).toBeLessThanOrEqual(56);
+    await input.fill("Первая строка\nВторая строка\nТретья строка");
+    expect(
+      await input.evaluate((el) => el.getBoundingClientRect().height),
+    ).toBeGreaterThan(emptyHeight);
+    await page.screenshot({
+      path: "test-results/composer-multiline-mobile.png",
+      fullPage: true,
+    });
+    await input.fill("x".repeat(3500));
+    await expect(page.locator(".character-count")).toBeVisible();
+    await input.fill("");
+  }
+
   await expect(input).toHaveValue("");
   expect(
     await page.evaluate(
@@ -270,7 +295,7 @@ test("routes unknown chats and preserves a failed message draft", async ({
               typeWebhook: "incomingMessageReceived",
               instanceData: { typeInstance: "telegram" },
               idMessage: "another-chat",
-              timestamp: 1700000000,
+              timestamp: Math.floor(Date.now() / 1000),
               senderData: { chatId: "456", chatName: "Другой собеседник" },
               messageData: {
                 typeMessage: "textMessage",
