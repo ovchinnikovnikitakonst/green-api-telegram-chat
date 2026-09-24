@@ -4,6 +4,16 @@
 
 Выбран **Telegram**, поскольку условия тестового задания разрешают Telegram или WhatsApp, если использовать MAX не получается. Приложение работает с личным Telegram-аккаунтом через инстанс GREEN-API, а не через Telegram Bot API.
 
+## Live Demo
+
+[Открыть Telegram Chat](https://ovchinnikovnikitakonst.github.io/green-api-telegram-chat/)
+
+Ссылка станет доступна после первого успешного deployment. В GitHub откройте Settings → Pages → Build and deployment → Source и выберите **GitHub Actions**. Workflow `.github/workflows/deploy.yml` собирает проект на Node.js 24 через `npm ci` и `npm run build`, публикует только `dist` при push в `main` или ручном запуске из `main` через workflow_dispatch.
+
+GitHub secrets и GREEN-API credentials для deployment не нужны. Параметры подключения вводятся только пользователем в браузере и остаются в памяти приложения.
+
+Production build и `npm run preview` используют base `/green-api-telegram-chat/`; локальный `npm run dev` по-прежнему работает от `/`. Для проверки сборки откройте `http://127.0.0.1:4173/green-api-telegram-chat/` после `npm run build` и `npm run preview`.
+
 ## Запуск
 
 Требуются Node.js 22.13+ из ветки 22 LTS либо Node.js 24+, npm, авторизованный Telegram-инстанс GREEN-API и доступ к интернету.
